@@ -43,7 +43,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="AutoShootRedSide", group="Robot")
-public class BegineerAuto extends LinearOpMode {
+public class BegineerAuto extends LinearOpMode
+{
 
     // Declare OpMode members.
     private DcMotor leftFrontDrive = null;
@@ -74,7 +75,8 @@ public class BegineerAuto extends LinearOpMode {
 
         sleep(500);
     }
-    public void move (){
+    public void move ()
+    {
 
         leftFrontDrive.setPower(0.5);
         rightBackDrive.setPower(0.5);
