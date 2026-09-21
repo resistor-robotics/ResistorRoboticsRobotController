@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
@@ -59,7 +59,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoShootRedSide", group="Robot")
+@Autonomous(name="Robot: Auto Drive By Time With Shooting", group="Robot")
 public class AutoShootRedSide extends LinearOpMode {
 
     // Declare OpMode members.
@@ -224,15 +224,9 @@ public class AutoShootRedSide extends LinearOpMode {
         middleLeftFeeder.setPower(bootWheelPower);
         intakeMotor.setPower(Math.abs(intakePower));
         //
-        leftFrontDrive.setPower(FORWARD_SPEED);
-        leftBackDrive.setPower(FORWARD_SPEED);
-        rightFrontDrive.setPower(FORWARD_SPEED);
-        rightBackDrive.setPower(FORWARD_SPEED);
-        sleep(1000);
-
         leftFrontDrive.setPower(-FORWARD_SPEED);
-        leftBackDrive.setPower(FORWARD_SPEED);
-        rightFrontDrive.setPower(FORWARD_SPEED);
+        leftBackDrive.setPower(-FORWARD_SPEED);
+        rightFrontDrive.setPower(-FORWARD_SPEED);
         rightBackDrive.setPower(-FORWARD_SPEED);
         sleep(1000);
         //

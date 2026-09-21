@@ -1,4 +1,6 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
+/*
+ * Copyright (c) 2025 FIRST
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -11,8 +13,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
+ * Neither the name of FIRST nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
  * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -22,47 +25,37 @@
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-/*
- * This OpMode illustrates the concept of driving a path based on time.
- * The code is structured as a LinearOpMode
- *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: RobotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backward for 1 Second
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- */
 
-@Autonomous(name="Robot: Auto Drive By Time With Shooting", group="Robot")
-public class RobotLM3AutoShoot extends LinearOpMode {
+@TeleOp(name = "LM3TeleopMecanum", group = "StarterBot")
+//@Disabled
+public class SparkTeleopMecanum extends OpMode {
+   final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
+
+
+
+    //how fast the launcher spins for shorter range
+    final double LAUNCHER_POWER = 0.8;
+
 
     // Declare OpMode members.
+    //wheel motors
     private DcMotor leftFrontDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -79,19 +72,25 @@ public class RobotLM3AutoShoot extends LinearOpMode {
     private CRServo middleLeftFeeder = null;
     // surgical tubing intake motor
     private DcMotor intakeMotor = null;
-    private ElapsedTime runtime = new ElapsedTime();
-     final double LAUNCHER_POWER = 0.8;
+    // adjusts wheel motor power
+    private double speedMultiplier = 1;
 
-    static final double     FORWARD_SPEED = 0.5;
-    static final double     TURN_SPEED    = 0.5;
+    // Setup a variable for each drive wheel to save power level for telemetry
+    double leftFrontPower;
+    double rightFrontPower;
+    double leftBackPower;
+    double rightBackPower;
 
+    /*
+     * Code to run ONCE when the driver hits INIT
+     */
     @Override
-    public void runOpMode() {
+    public void init() {
 
         /*
          * Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
-         * step.
+         * step in the driver hub
          */
         leftFrontDrive = hardwareMap.get(DcMotor.class, "FrontLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "FrontRight");
@@ -109,7 +108,7 @@ public class RobotLM3AutoShoot extends LinearOpMode {
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
          * because the axles point in opposite directions. Pushing the left stick forward
-         * MUST make robot go forward. So adjust these two lines based on your first test drive.
+         * MUST make robot go forward. So adjust these four lines based on your first test drive.
          * Note: The settings here assume direct drive on left and right wheels. Gear
          * Reduction or 90 Deg drives may require direction flips
          */
@@ -143,7 +142,6 @@ public class RobotLM3AutoShoot extends LinearOpMode {
         /*
          * set Feeders to an initial value to initialize the servo controller
          */
-        final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
         lowerRightFeeder.setPower(STOP_SPEED);
         lowerLeftFeeder.setPower(STOP_SPEED);
         middleRightFeeder.setPower(STOP_SPEED);
@@ -178,66 +176,110 @@ public class RobotLM3AutoShoot extends LinearOpMode {
          * Tell the driver that initialization is complete.
          */
         telemetry.addData("Status", "Initialized");
+    }
 
-        // Wait for the game to start (driver presses START)
-        waitForStart();
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit START
+     */
+    @Override
+    public void init_loop() {
+    }
 
-        // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
+    /*
+     * Code to run ONCE when the driver hits START
+     */
+    @Override
+    public void start() {
+    }
 
-        // Step 1:  Drive forward for 1 second
-        leftFrontDrive.setPower(-FORWARD_SPEED);
-        leftBackDrive.setPower(-FORWARD_SPEED);
-        rightFrontDrive.setPower(-FORWARD_SPEED);
-        rightBackDrive.setPower(-FORWARD_SPEED);
-        sleep(2000);
-        // Step 2:  Stop
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        sleep(500);
-        //
-        leftLauncher.setPower(LAUNCHER_POWER);
-        rightLauncher.setPower(LAUNCHER_POWER);
-        sleep(250);
-        double bootWheelPower = 1.;
-        double intakePower = 1;
+    /*
+     * Code to run REPEATEDLY after the driver hits START but before they hit STOP
+     */
+    @Override
+    public void loop() {
+        /*
+         * Here we call a function called mecanumDrive. The mecanumDrive function
+         * takes the input from the joysticks, and applies power to the motors to
+         *  move the robot as requested by the driver.
+         */
+       mecanumDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
+
+         // Here we give driver 2 control of the feeder wheels.
+        double bootWheelPower = -gamepad2.left_stick_y;
+        double intakePower = gamepad2.right_stick_y;
         upperRightFeeder.setPower(bootWheelPower);
         upperLeftFeeder.setPower(bootWheelPower);
         lowerRightFeeder.setPower(bootWheelPower);
         lowerLeftFeeder.setPower(bootWheelPower);
         middleRightFeeder.setPower(bootWheelPower);
         middleLeftFeeder.setPower(bootWheelPower);
-
+        //if the boot wheels are not spinning, but the intake is powered
+        //the lower boot wheels will spin to help with intaking
+        if(bootWheelPower == 0)
+        {
+            lowerRightFeeder.setPower(Math.abs(intakePower));
+            lowerLeftFeeder.setPower(Math.abs(intakePower));
+        }
+        // Here we set the controls to the intake motor with surgical tubing
         intakeMotor.setPower(Math.abs(intakePower));
-        sleep(5000);
-        //
-        leftLauncher.setPower(0);
-        rightLauncher.setPower(0);
-        bootWheelPower = 0;
-        intakePower = 0;
-        upperRightFeeder.setPower(bootWheelPower);
-        upperLeftFeeder.setPower(bootWheelPower);
-        lowerRightFeeder.setPower(bootWheelPower);
-        lowerLeftFeeder.setPower(bootWheelPower);
-        middleRightFeeder.setPower(bootWheelPower);
-        middleLeftFeeder.setPower(bootWheelPower);
-        intakeMotor.setPower(Math.abs(intakePower));
-        //
-        leftFrontDrive.setPower(-FORWARD_SPEED);
-        leftBackDrive.setPower(-FORWARD_SPEED);
-        rightFrontDrive.setPower(-FORWARD_SPEED);
-        rightBackDrive.setPower(-FORWARD_SPEED);
-        sleep(1000);
-        //
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        sleep(1000);
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
+        if (gamepad2.b) { // stop flywheels
+            leftLauncher.setPower(STOP_SPEED);
+            rightLauncher.setPower(STOP_SPEED);
+        }
+        else if (gamepad2.a) // sets launchers to launch the ball
+        {
+            leftLauncher.setPower(LAUNCHER_POWER);
+            rightLauncher.setPower(LAUNCHER_POWER);
+        }
+
+        // show Velocity of left and right Launcher wheels on driver hub screen
+        telemetry.addData("LeftLauncherVelocity", leftLauncher.getVelocity());
+        telemetry.addData("RightLauncherVelocity", rightLauncher.getVelocity());
+
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
+    }
+    void mecanumDrive(double forward, double strafe, double rotate){
+
+        //if driver 1 holds down the left bumper, the orientation of the robot is reversed
+        if(gamepad1.left_bumper) {
+            forward = -forward;
+            strafe = -strafe;
+        }
+        // if driver 1 pushes b the robot slows down by 80%
+        if(gamepad1.y) {
+            speedMultiplier = 0.2;
+        }
+        // if driver 1 pushes b the robot slows down by 50%
+        if(gamepad1.b) {
+            speedMultiplier = 0.5;
+        }
+        //if driver 1 pushes a the robot goes normal speed
+        if(gamepad1.a) {
+            speedMultiplier = 1;
+        }
+        /* the denominator is the largest motor power (absolute value) or 1
+         * This ensures all the powers maintain the same ratio,
+         * but only if at least one is out of the range [-1, 1]
+         */
+        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
+
+        // we calculate the required motor powers to move the robot according to the joysticks
+        leftFrontPower = (forward + strafe + rotate) / denominator;
+        rightFrontPower = (forward - strafe - rotate) / denominator;
+        leftBackPower = (forward - strafe + rotate) / denominator;
+        rightBackPower = (forward + strafe - rotate) / denominator;
+
+        // we set the power to each wheel multiplied by our speed multiplier
+        leftFrontDrive.setPower(leftFrontPower * speedMultiplier);
+        rightFrontDrive.setPower(rightFrontPower * speedMultiplier);
+        leftBackDrive.setPower(leftBackPower * speedMultiplier);
+        rightBackDrive.setPower(rightBackPower * speedMultiplier);
     }
 }
