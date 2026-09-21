@@ -30,7 +30,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
@@ -60,7 +60,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "LM1TeleopMecanum", group = "StarterBot")
 //@Disabled
-public class LM1TeleopMecanum extends OpMode {
+public class LeagueMeet2TeleopMecanum extends OpMode {
     final double FEED_TIME_SECONDS = 0.20; //The feeder servos run this long when a shot is requested.
     final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
     final double FULL_SPEED = 1.0;

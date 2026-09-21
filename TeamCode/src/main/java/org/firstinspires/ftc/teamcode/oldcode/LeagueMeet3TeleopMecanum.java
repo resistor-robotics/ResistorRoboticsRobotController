@@ -30,7 +30,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
@@ -43,15 +43,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
-@TeleOp(name = "LM3TeleopMecanum", group = "StarterBot")
+@TeleOp(name = "LM2TeleopMecanum", group = "StarterBot")
 //@Disabled
-public class SparkTeleopMecanum extends OpMode {
+public class LeagueMeet3TeleopMecanum extends OpMode {
    final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
 
 
-
+   //how fast the launcher spins for longer range
+    final double LAUNCHER_LONGRANGE_VELOCITY = 2800;
     //how fast the launcher spins for shorter range
-    final double LAUNCHER_POWER = 0.8;
+    final double LAUNCHER_SHORTRANGE_VELOCITY = 1400;
+    //how fast the launcher spins to return the artifacts
+    final double LAUNCHER_UNJAMMER_VELOCITY = -1075;
 
 
     // Declare OpMode members.
@@ -68,8 +71,6 @@ public class SparkTeleopMecanum extends OpMode {
     private CRServo lowerLeftFeeder = null;
     private CRServo upperRightFeeder = null;
     private CRServo upperLeftFeeder = null;
-    private CRServo middleRightFeeder = null;
-    private CRServo middleLeftFeeder = null;
     // surgical tubing intake motor
     private DcMotor intakeMotor = null;
     // adjusts wheel motor power
@@ -98,12 +99,10 @@ public class SparkTeleopMecanum extends OpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "BackRight");
         leftLauncher = hardwareMap.get(DcMotorEx.class, "LeftPitcher");
         rightLauncher = hardwareMap.get(DcMotorEx.class, "RightPitcher");
-        lowerRightFeeder = hardwareMap.get(CRServo.class, "LowerRightGeckoWheel");
-        lowerLeftFeeder = hardwareMap.get(CRServo.class, "LowerLeftGeckoWheel");
-        middleRightFeeder = hardwareMap.get(CRServo.class, "MiddleRightGeckoWheel");
-        middleLeftFeeder = hardwareMap.get(CRServo.class, "MiddleLeftGeckoWheel");
-        upperRightFeeder = hardwareMap.get(CRServo.class, "UpperRightGeckoWheel");
-        upperLeftFeeder = hardwareMap.get(CRServo.class, "UpperLeftGeckoWheel");
+        lowerRightFeeder = hardwareMap.get(CRServo.class, "LowerRightBootWheel");
+        lowerLeftFeeder = hardwareMap.get(CRServo.class, "LowerLeftBootWheel");
+        upperRightFeeder = hardwareMap.get(CRServo.class, "UpperRightBootWheel");
+        upperLeftFeeder = hardwareMap.get(CRServo.class, "UpperLeftBootWheel");
         intakeMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -144,31 +143,22 @@ public class SparkTeleopMecanum extends OpMode {
          */
         lowerRightFeeder.setPower(STOP_SPEED);
         lowerLeftFeeder.setPower(STOP_SPEED);
-        middleRightFeeder.setPower(STOP_SPEED);
-        middleLeftFeeder.setPower(STOP_SPEED);
-        upperLeftFeeder.setPower(STOP_SPEED);
-        upperRightFeeder.setPower(STOP_SPEED);
 
         leftLauncher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
         rightLauncher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
 
 
         /*
-         * Much like our drivetrain motors, we set the right servos
-         *  to reverse so that they all work to feed the ball into the robot.
+         * Much like our drivetrain motors, we set the left feeder servo to reverse so that they
+         * both work to feed the ball into the robot.
          */
-        lowerRightFeeder.setDirection(DcMotorSimple.Direction.REVERSE);
-        middleRightFeeder.setDirection(DcMotorSimple.Direction.REVERSE);
-        upperRightFeeder.setDirection(DcMotorSimple.Direction.REVERSE);
-        lowerLeftFeeder.setDirection(DcMotorSimple.Direction.FORWARD);
-        upperLeftFeeder.setDirection(DcMotor.Direction.FORWARD);
-        middleLeftFeeder.setDirection(DcMotor.Direction.FORWARD);
-
-        leftLauncher.setDirection(DcMotor.Direction.REVERSE);
-        rightLauncher.setDirection(DcMotor.Direction.FORWARD);
-
+        lowerRightFeeder.setDirection(DcMotorSimple.Direction.FORWARD);
+        upperRightFeeder.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftLauncher.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-
+        lowerLeftFeeder.setDirection(DcMotorSimple.Direction.REVERSE);
+        upperLeftFeeder.setDirection(DcMotor.Direction.FORWARD);
+        rightLauncher.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -202,35 +192,37 @@ public class SparkTeleopMecanum extends OpMode {
          * takes the input from the joysticks, and applies power to the motors to
          *  move the robot as requested by the driver.
          */
-       mecanumDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
+       mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+
 
          // Here we give driver 2 control of the feeder wheels.
-        double bootWheelPower = -gamepad2.left_stick_y;
-        double intakePower = gamepad2.right_stick_y;
-        upperRightFeeder.setPower(bootWheelPower);
-        upperLeftFeeder.setPower(bootWheelPower);
-        lowerRightFeeder.setPower(bootWheelPower);
-        lowerLeftFeeder.setPower(bootWheelPower);
-        middleRightFeeder.setPower(bootWheelPower);
-        middleLeftFeeder.setPower(bootWheelPower);
-        //if the boot wheels are not spinning, but the intake is powered
-        //the lower boot wheels will spin to help with intaking
-        if(bootWheelPower == 0)
-        {
-            lowerRightFeeder.setPower(Math.abs(intakePower));
-            lowerLeftFeeder.setPower(Math.abs(intakePower));
-        }
+        double bootwheelPower = -gamepad2.left_stick_y;
+        upperRightFeeder.setPower(bootwheelPower);
+        upperLeftFeeder.setPower(bootwheelPower);
+        lowerRightFeeder.setPower(bootwheelPower);
+        lowerLeftFeeder.setPower(bootwheelPower);
+
         // Here we set the controls to the intake motor with surgical tubing
-        intakeMotor.setPower(Math.abs(intakePower));
+        intakeMotor.setPower(gamepad2.right_stick_y);
 
         if (gamepad2.b) { // stop flywheels
-            leftLauncher.setPower(STOP_SPEED);
-            rightLauncher.setPower(STOP_SPEED);
+            leftLauncher.setVelocity(STOP_SPEED);
+            rightLauncher.setVelocity(STOP_SPEED);
         }
-        else if (gamepad2.a) // sets launchers to launch the ball
+        else if (gamepad2.x) // reverses left and right launchers to unjam artifacts.
         {
-            leftLauncher.setPower(LAUNCHER_POWER);
-            rightLauncher.setPower(LAUNCHER_POWER);
+            leftLauncher.setVelocity(LAUNCHER_UNJAMMER_VELOCITY);
+            rightLauncher.setVelocity(LAUNCHER_UNJAMMER_VELOCITY);
+        }
+        else if (gamepad2.y) // sets launchers to launch the ball a longer distance.
+        {
+            leftLauncher.setVelocity(LAUNCHER_LONGRANGE_VELOCITY);
+            rightLauncher.setVelocity(LAUNCHER_LONGRANGE_VELOCITY);
+        }
+        else if (gamepad2.a) // sets launchers to launch the ball a shorter distance.
+        {
+            leftLauncher.setVelocity(LAUNCHER_SHORTRANGE_VELOCITY);
+            rightLauncher.setVelocity(LAUNCHER_SHORTRANGE_VELOCITY);
         }
 
         // show Velocity of left and right Launcher wheels on driver hub screen
@@ -246,17 +238,7 @@ public class SparkTeleopMecanum extends OpMode {
     public void stop() {
     }
     void mecanumDrive(double forward, double strafe, double rotate){
-
-        //if driver 1 holds down the left bumper, the orientation of the robot is reversed
-        if(gamepad1.left_bumper) {
-            forward = -forward;
-            strafe = -strafe;
-        }
-        // if driver 1 pushes b the robot slows down by 80%
-        if(gamepad1.y) {
-            speedMultiplier = 0.2;
-        }
-        // if driver 1 pushes b the robot slows down by 50%
+        // if driver 1 pushes b the robot slows down
         if(gamepad1.b) {
             speedMultiplier = 0.5;
         }
