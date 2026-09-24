@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="AutoShootRedSide", group="Robot")
-public class EthanRuqayaBegineerAuto extends LinearOpMode
+@Autonomous(name="DiagonalLeft", group="Robot")
+public class AutoMoveDiagonallyRight extends LinearOpMode
 {
 
     // Declare OpMode members.
@@ -68,20 +68,20 @@ public class EthanRuqayaBegineerAuto extends LinearOpMode
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        move();
+        // move diagonally right at about 20 degrees for 800 ms
+        leftFrontDrive.setPower(-0.25);
+        rightBackDrive.setPower(-0.25);
+        rightFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
 
-        sleep(500);
+        sleep(800);
 
-
-    }
-    public void move()
-    {
-
+        // stop motors and wait 1000 ms so motors can stop fully before auto turns off
         leftFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
 
+        sleep(1000);
     }
-
 }
