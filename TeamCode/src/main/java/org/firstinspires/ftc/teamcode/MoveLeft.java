@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="AutoShootRedSide", group="Robot")
-public class Alejandro_and_Zoe extends LinearOpMode
+@Autonomous(name="MoveLeft", group="Robot")
+public class MoveLeft extends LinearOpMode
 {
 
     // Declare OpMode members.
@@ -70,67 +70,41 @@ public class Alejandro_and_Zoe extends LinearOpMode
 
         move();
 
-        sleep(1000);
+        sleep(500);
 
-        Moveright();
+        Moveleft();
 
-        sleep(3000);
+        sleep(1500);
 
-        move();
+        Stop();
 
-        sleep(1000);
 
-        Turnleft();
 
-        sleep(1000);
-
-        Turnleft();
-
-        sleep(1000);
-
-        move();
-
-        sleep(1850);
-
-        Moveright();
-
-        sleep(3000);
-
-        Turnleft();
-
-        sleep(2000);
-
-        moveback();
-
-        sleep(150);
     }
     public void move()
     {
 
-        leftFrontDrive.setPower(0.5);
-        rightBackDrive.setPower(0.5);
-        rightFrontDrive.setPower(0.5);
-        leftBackDrive.setPower(0.5);
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(0.25);
+        leftBackDrive.setPower(0.25);
 
     }
-    public void moveback()
-    {
-        leftFrontDrive.setPower(-0.5);
-        rightBackDrive.setPower(-0.5);
-        rightFrontDrive.setPower(-0.5);
-        leftBackDrive.setPower(-0.5);
-}
-    public void Moveright(){
 
-        leftFrontDrive.setPower(0.5);
-        rightBackDrive.setPower(0.5);
-        rightFrontDrive.setPower(-0.5);
-        leftBackDrive.setPower(-0.5);
+    public void Moveleft(){
+
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
     }
-    public void Turnleft(){
-        leftFrontDrive.setPower(-0.5);
-        rightBackDrive.setPower(0.5);
-        rightFrontDrive.setPower(0.5);
-        leftBackDrive.setPower(-0.5);
+
+    public void Stop(){
+
+        leftFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        sleep(500);
     }
 }
