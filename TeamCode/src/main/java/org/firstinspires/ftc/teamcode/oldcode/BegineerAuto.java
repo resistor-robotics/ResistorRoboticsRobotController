@@ -27,15 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="MoveLeft", group="Robot")
-public class MoveLeft extends LinearOpMode
+@Autonomous(name="AutoShootRedSide", group="Robot")
+@Disabled
+public class BegineerAuto extends LinearOpMode
 {
 
     // Declare OpMode members.
@@ -63,48 +65,18 @@ public class MoveLeft extends LinearOpMode
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         move();
 
         sleep(500);
-
-        Moveleft();
-
-        sleep(1500);
-
-        Stop();
-
-
-
     }
-    public void move()
+    public void move ()
     {
 
-        leftFrontDrive.setPower(0.25);
-        rightBackDrive.setPower(0.25);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        leftFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
 
     }
 
-    public void Moveleft(){
-
-        leftFrontDrive.setPower(0.25);
-        rightBackDrive.setPower(0.25);
-        rightFrontDrive.setPower(-0.25);
-        leftBackDrive.setPower(-0.25);
-    }
-
-    public void Stop(){
-
-        leftFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        sleep(500);
-    }
 }

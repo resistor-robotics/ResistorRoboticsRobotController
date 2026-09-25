@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="MoveRight", group="Robot")
-public class MoveRight extends LinearOpMode
+@Autonomous(name="MoveLeft", group="Robot")
+public class AutoMoveLeft extends LinearOpMode
 {
 
     // Declare OpMode members.
@@ -72,11 +72,13 @@ public class MoveRight extends LinearOpMode
 
         sleep(500);
 
-        Moveright();
+        Moveleft();
 
         sleep(1500);
 
         Stop();
+
+
 
     }
     public void move()
@@ -89,12 +91,12 @@ public class MoveRight extends LinearOpMode
 
     }
 
-    public void Moveright(){
+    public void Moveleft(){
 
-        leftFrontDrive.setPower(-0.25);
-        rightBackDrive.setPower(-0.25);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
     }
 
     public void Stop(){
