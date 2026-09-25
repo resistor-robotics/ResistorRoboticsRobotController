@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="DiagonalLeft", group="Robot")
+@Autonomous(name="DiagonalRight", group="Robot")
 public class AutoMoveDiagonallyRight extends LinearOpMode
 {
 
