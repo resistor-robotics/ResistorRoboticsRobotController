@@ -68,6 +68,8 @@ public class AutoMoveDiagonallyRight extends LinearOpMode
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        waitForStart();
+
         // move diagonally right at about 20 degrees for 800 ms
         leftFrontDrive.setPower(-0.25);
         rightBackDrive.setPower(-0.25);

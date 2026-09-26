@@ -68,6 +68,8 @@ public class AutoMoveRight extends LinearOpMode
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        waitForStart();
+
         move();
 
         sleep(500);
