@@ -73,7 +73,7 @@ public class Starter_Bot_Code extends OpMode {
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM, for chainsaw extension 1400 ticks/s
     public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
 
 
@@ -82,7 +82,6 @@ public class Starter_Bot_Code extends OpMode {
      * choose to declare these variables inside the mecanumDrive() function, instead we declare them
      * here so that we can access them in our main loop for telemetry.
      */
-
     double leftFrontPower;
     double rightFrontPower;
     double leftBackPower;
@@ -231,6 +230,9 @@ public class Starter_Bot_Code extends OpMode {
          */
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftFrontPower, rightFrontPower);
         telemetry.addData("Triggers", "left (%.2f, right (%.2f)",gamepad2.left_trigger, gamepad2.right_trigger);
+        // print launch motor velocity in rotations per second
+        double launchMotorSpeed = (launcher.getVelocity() / 28) * 60;
+        telemetry.addData("launch motor speed", launchMotorSpeed);
     }
 
     /*
@@ -260,7 +262,6 @@ public class Starter_Bot_Code extends OpMode {
         /*
          * Send calculated power to wheels
          */
-
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
