@@ -73,8 +73,8 @@ public class Starter_Bot_Code extends OpMode {
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1400; //2678 RPM, for chainsaw extension 1400 ticks/s original 1250
-    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1375; //2678 RPM, for chainsaw extension 1375 ticks/s, original 1250
+    public final int LAUNCHER_MIN_VELOCITY = 1225; //2571 RPM, original 1200, for chainsaw extension 1225 ticks/s
 
 
     /*
