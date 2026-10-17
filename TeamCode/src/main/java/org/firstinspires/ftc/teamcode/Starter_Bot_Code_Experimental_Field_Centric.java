@@ -98,6 +98,9 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
     // is robot field centric or not
     boolean fieldCentric = true;
 
+    // amount speed reduction
+    double speedMultiplier = 1;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -220,6 +223,12 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
             fieldCentric = !fieldCentric;
         }
 
+        // decreased speed of drive train if left trigger is pressed
+        if (gamepad1.left_trigger_pressed()) {
+            speedMultiplier = 0.5;
+        } else {
+            speedMultiplier = 1;
+        }
         /*
          * Set the intake power variable to equal the right trigger, minus the left trigger.
          * Each trigger outputs a signal from 0-1, with 0 as fully released, and 1 fully depressed.
@@ -286,10 +295,10 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         /*
          * Send calculated power to wheels
          */
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        leftFrontDrive.setPower(leftFrontPower * speedMultiplier);
+        rightFrontDrive.setPower(rightFrontPower * speedMultiplier);
+        leftBackDrive.setPower(leftBackPower * speedMultiplier);
+        rightBackDrive.setPower(rightBackPower * speedMultiplier);
     }
 
     void launch() {
