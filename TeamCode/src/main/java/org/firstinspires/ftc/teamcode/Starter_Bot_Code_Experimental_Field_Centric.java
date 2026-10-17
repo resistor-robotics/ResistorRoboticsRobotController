@@ -51,7 +51,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * we will also need to adjust the "PIDF" coefficients with some that are a better fit for our application.
  */
 
-@TeleOp(name = "Mec BioBuzz StarterBot Teleop", group = "StarterBot")
+@TeleOp(name = "Starter bot experimental field centric drive", group = "StarterBot")
 //@Disabled
 public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
 
