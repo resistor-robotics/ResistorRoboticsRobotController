@@ -274,7 +274,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         }
         double angle = Math.atan2(x, y) - heading;
         double magnitude = Math.hypot(x, y);
-        double frontRightBackLeft = Math.sin(angle - Math.PI*0.25) * magnitude;
+        double frontRightBackLeft = -Math.sin(angle - Math.PI*0.25) * magnitude;
         double frontLeftBackRight = Math.sin(angle + Math.PI*0.25) * magnitude;
 
 
