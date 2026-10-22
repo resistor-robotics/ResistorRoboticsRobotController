@@ -224,7 +224,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         }
 
         // decreased speed of drive train if left trigger is pressed
-        if (gamepad1.left_trigger_pressed()) {
+        if (gamepad1.left_trigger_pressed) {
             speedMultiplier = 0.5;
         } else {
             speedMultiplier = 1;
@@ -326,6 +326,8 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         if (gamepad2.right_bumper && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
             intakePower += 0.5;
+        } else if (gamepad2.left_bumper) {
+            windmillServo.setPower(-1);
         } else {
             windmillServo.setPower(0);
         }
