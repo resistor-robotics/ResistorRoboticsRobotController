@@ -53,10 +53,10 @@ public class AutoMoveRight extends LinearOpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step.
          */
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "FrontLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "FrontRight");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "BackLeft");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "BackRight");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -74,11 +74,13 @@ public class AutoMoveRight extends LinearOpMode
 
         sleep(500);
 
-        Moveright();
+        Moveleft();
 
         sleep(1500);
 
         Stop();
+
+
 
     }
     public void move()
@@ -91,12 +93,12 @@ public class AutoMoveRight extends LinearOpMode
 
     }
 
-    public void Moveright(){
+    public void Moveleft(){
 
-        leftFrontDrive.setPower(-0.25);
-        rightBackDrive.setPower(-0.25);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
     }
 
     public void Stop(){
