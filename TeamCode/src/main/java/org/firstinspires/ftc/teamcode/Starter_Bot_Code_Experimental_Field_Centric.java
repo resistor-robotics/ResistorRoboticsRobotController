@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -65,7 +67,10 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
     private CRServo leftIntakeServo = null;
     private CRServo rightIntakeServo = null;
     private CRServo windmillServo = null;
+    private Servo shield1 = null;
+    private Servo shield2 = null;
     IMU imu;
+    VoltageSensor battery = null;
 
 
     /*
@@ -78,8 +83,11 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1375; //2678 RPM, for chainsaw extension 1375 ticks/s, original 1250
-    public final int LAUNCHER_MIN_VELOCITY = 1225; //2571 RPM, original 1200, for chainsaw extension 1225 ticks/s
+
+    // pollen speed for chainsaw 1324 and 1200 ticks/s
+    // nectar speed for chainsaw 1986 and 1850 ticks/s
+    public int LAUNCHER_TARGET_VELOCITY = 1324; //2678 RPM, original 1250
+    public int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM, original 1200
 
 
     /*
@@ -121,10 +129,14 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
         leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake_servo");
         rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
+        shield1 = hardwareMap.get(Servo.class, "shield1");
+        shield2 = hardwareMap.get(Servo.class, "shield2");
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
+        battery = hardwareMap.get(VoltageSensor.class, "Control Hub");
+
 
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -243,6 +255,19 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
          */
         intakePower = gamepad2.right_trigger - gamepad2.left_trigger;
 
+        // change launch speed for nectar
+        if (gamepad2.b == true) {
+            if (battery.getVoltage() < 13) {
+                LAUNCHER_TARGET_VELOCITY = 1630;
+                LAUNCHER_MIN_VELOCITY = 1480;
+            } else {
+                LAUNCHER_TARGET_VELOCITY = 1579;
+                LAUNCHER_MIN_VELOCITY = 1429;
+            }
+        } else {
+            LAUNCHER_TARGET_VELOCITY = 1324;
+            LAUNCHER_MIN_VELOCITY = 1200;
+        }
         launch();
 
         /*
@@ -256,6 +281,8 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         intake.setPower(intakePower);
         leftIntakeServo.setPower(intakePower);
         rightIntakeServo.setPower(intakePower);
+
+        moveShield(gamepad2.aWasPressed(), gamepad2.yWasPressed());
 
         /*
          * Show motor powers on the Driver Station via telemetry.
@@ -330,6 +357,16 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
             windmillServo.setPower(-1);
         } else {
             windmillServo.setPower(0);
+        }
+    }
+
+    void moveShield(boolean shieldDown, boolean shieldUp) {
+        if (shieldDown == true) {
+            shield1.setPosition(1);
+            shield2.setPosition(0);
+        } else if (shieldUp == true) {
+            shield1.setPosition(0.6);
+            shield2.setPosition(0.4);
         }
     }
 }
