@@ -70,7 +70,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
     private Servo shield1 = null;
     private Servo shield2 = null;
     IMU imu;
-    VoltageSensor battery = null;
+    VoltageSensor battery;
 
 
     /*
@@ -258,7 +258,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         // change launch speed for nectar
         if (gamepad2.b == true) {
             if (battery.getVoltage() < 13) {
-                LAUNCHER_TARGET_VELOCITY = 1630;
+                LAUNCHER_TARGET_VELOCITY = 1730;
                 LAUNCHER_MIN_VELOCITY = 1480;
             } else {
                 LAUNCHER_TARGET_VELOCITY = 1579;
@@ -365,8 +365,8 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
             shield1.setPosition(1);
             shield2.setPosition(0);
         } else if (shieldUp == true) {
-            shield1.setPosition(0.6);
-            shield2.setPosition(0.4);
+            shield1.setPosition(0.55);
+            shield2.setPosition(0.45);
         }
     }
 }
