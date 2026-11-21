@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
@@ -57,6 +57,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 //@Disabled
 public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
 
+    private ElapsedTime timer = new ElapsedTime();
     // Declare OpMode members.
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -69,8 +70,12 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
     private CRServo windmillServo = null;
     private Servo shield1 = null;
     private Servo shield2 = null;
+    private CRServo Dustpan = null;
     IMU imu;
     VoltageSensor battery;
+
+    String dustpanState = "up";
+    double startTime = 0;
 
 
     /*
@@ -115,6 +120,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
     @Override
     public void init() {
 
+        timer.reset();
         /*
          * Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
@@ -131,6 +137,7 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
         shield1 = hardwareMap.get(Servo.class, "shield1");
         shield2 = hardwareMap.get(Servo.class, "shield2");
+        Dustpan = hardwareMap.get(CRServo.class, "Dustpan");
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
@@ -283,10 +290,26 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
         rightIntakeServo.setPower(intakePower);
 
         moveShield(gamepad2.aWasPressed(), gamepad2.yWasPressed());
-
+        //Flower dustpan movement
+        if(gamepad2.dpadDownWasPressed() && dustpanState.equals("up")) {
+            DustpanUp();
+        }
+        else if(dustpanState.equals("lowering"))
+        {
+            DustpanUp();
+        }
+        else if(gamepad2.dpadUpWasPressed() && dustpanState.equals("down")) {
+            DustpanUp();
+        }
+        else if(dustpanState.equals("goingUp"))
+        {
+            DustpanUp();
+        }
         /*
          * Show motor powers on the Driver Station via telemetry.
          */
+        telemetry.addData("dustpanState: ", dustpanState);
+        telemetry.addData("Timer: ", timer.milliseconds());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftFrontPower, rightFrontPower);
         telemetry.addData("Triggers", "left (%.2f, right (%.2f)",gamepad2.left_trigger, gamepad2.right_trigger);
         // print launch motor velocity in rotations per second
@@ -368,5 +391,36 @@ public class Starter_Bot_Code_Experimental_Field_Centric extends OpMode {
             shield1.setPosition(0.55);
             shield2.setPosition(0.45);
         }
+    }
+    void DustpanUp() {
+        if (dustpanState.equals("up")) {
+            timer.reset();
+            startTime = timer.milliseconds();
+            Dustpan.setPower(-1);
+            dustpanState = "lowering";
+        }
+        else if (dustpanState.equals("lowering"))
+        {
+            if(timer.milliseconds() - startTime > 2900)
+            {
+                Dustpan.setPower(0);
+                dustpanState = "down";
+            }
+        }
+        else if (dustpanState.equals("down")) {
+            timer.reset();
+            Dustpan.setPower(1);
+            dustpanState = "goingUp";
+        }
+        else if (dustpanState.equals("goingUp"))
+        {
+            if(timer.milliseconds() - startTime > 3000)
+            {
+                Dustpan.setPower(0);
+                dustpanState = "up";
+            }
+        }
+
+
     }
 }
