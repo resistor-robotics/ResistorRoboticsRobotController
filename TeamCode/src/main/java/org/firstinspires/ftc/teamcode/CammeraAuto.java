@@ -17,10 +17,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 @Autonomous(name="CammeraAuto", group="Robot")
 public class CammeraAuto extends LinearOpMode
 {
-    @TeleOp(name = "Concept: AprilTag", group = "Concept")
-//@Disabled
-    public class ConceptAprilTag extends LinearOpMode {
-
         private static final boolean USE_WEBCAM = true;
 
         // Declare OpMode members.
@@ -57,7 +53,7 @@ public class CammeraAuto extends LinearOpMode
                             PRODUCT_ID_ARDUCAM_OV5648,
                             CameraCompatibilityManager.Quirk.AVOID_LIB_USB_RESET_DEVICE);
 
-            initAprilTag();
+
 
             // Wait for the DS start button to be touched.
             telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -105,13 +101,19 @@ public class CammeraAuto extends LinearOpMode
 
 
 
-            // Collect from garden
             move();
             sleep(70);
             leftstrafe();
             sleep(700);
+            intake.setPower(1);
+            sleep(500);
             moveBack();
             sleep(70);
+            move();
+            intake.setPower(0);
+            sleep(70);
+            rightstrafe();
+            sleep(500);
 
             move();
             long time = (long) (-450L * (battery.getVoltage()) + 13600L);
@@ -160,15 +162,13 @@ public class CammeraAuto extends LinearOpMode
             rightFrontDrive.setPower(0.25);
             leftBackDrive.setPower(-0.25);
     }
-    public void rightstrafe() {
-            
-        leftFrontDrive.setPower(-0.25);
-        rightBackDrive.setPower(0.25);
-        rightFrontDrive.setPower(-0.25);
-        leftBackDrive.setPower(0.25);
-
+        public void rightstrafe() {
+            leftFrontDrive.setPower(-0.25);
+            rightBackDrive.setPower(0.25);
+            rightFrontDrive.setPower(-0.25);
+            leftBackDrive.setPower(0.25);
         }
-    }
+
         public void Stop() {
 
             leftFrontDrive.setPower(0);
@@ -195,4 +195,4 @@ public class CammeraAuto extends LinearOpMode
             shield2.setPosition(0);
 
         }
-    }
+}
