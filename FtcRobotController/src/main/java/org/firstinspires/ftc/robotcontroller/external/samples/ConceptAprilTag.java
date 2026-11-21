@@ -70,7 +70,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: AprilTag", group = "Concept")
-@Disabled
+//@Disabled
 public class ConceptAprilTag extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -97,8 +97,8 @@ public class ConceptAprilTag extends LinearOpMode {
     // Windows: open a PowerShell, run:
     // Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -like 'USB*' } | Select-Object FriendlyName, InstanceId
     // and locate the line for your camera. The VID and PID is listed directly in the line.
-    static final int VENDOR_ID_SUNPLUS_INNOVATION_TECHNOLOGY = 0x1BCF;
-    static final int PRODUCT_ID_ARDUCAM_OV5648 = 0x284C;
+    static final int VENDOR_ID_SUNPLUS_INNOVATION_TECHNOLOGY = 0x046D;
+    static final int PRODUCT_ID_ARDUCAM_OV5648 = 0x0825;
 
     @Override
     public void runOpMode() {
