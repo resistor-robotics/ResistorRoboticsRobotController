@@ -1,32 +1,3 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -35,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous(name="AutoShoot", group="Robot")
@@ -48,8 +20,12 @@ public class AutoShoot extends LinearOpMode
     private DcMotor rightBackDrive = null;
     private DcMotorEx launcher = null;
     private CRServo windmillServo = null;
-    public final int LAUNCHER_TARGET_VELOCITY = 1375; //2678 RPM, for chainsaw extension 1375 ticks/s, original 1250
-    public final int LAUNCHER_MIN_VELOCITY = 1225; //2571 RPM, original 1200, for chainsaw extension 1225 ticks/s
+    private Servo shield1 = null;
+    private Servo shield2 = null;
+    private DcMotor intake = null;
+
+
+    public final int LAUNCHER_TARGET_VELOCITY = 1324; //2678 RPM, for chainsaw extension 1375 ticks/s, original 1250
 
     @Override
     public void runOpMode() {
@@ -65,6 +41,9 @@ public class AutoShoot extends LinearOpMode
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
+        shield1 = hardwareMap.get(Servo.class, "shield1");
+        shield2 = hardwareMap.get(Servo.class, "shield2");
+        intake = hardwareMap.get(DcMotor.class, "intake");
         launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(40, 0, 0, 12.5));
@@ -82,33 +61,48 @@ public class AutoShoot extends LinearOpMode
         waitForStart();
 
         launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-        sleep(1000);
-        windmillServo.setPower(1);
+        sleep(2000);
+        windmillServo.setPower(-1);
+        intake.setPower(0.5);
         sleep(6000);
         windmillServo.setPower(0);
         launcher.setVelocity(0);
+        intake.setPower(0);
         move();
-        sleep(3000);
+        sleep(10000);
+        moveBack();
+        sleep(1250);
         moveLeft();
-        sleep(1000);
+        sleep(4500);
         Stop();
+        /*sleep(2000);
+        celebration();*/
     }
     public void move()
     {
 
-        leftFrontDrive.setPower(0.50);
-        rightBackDrive.setPower(0.50);
-        rightFrontDrive.setPower(0.50);
-        leftBackDrive.setPower(0.50);
+        leftFrontDrive.setPower(-0.25);
+        rightBackDrive.setPower(-0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
+
+    }
+
+    public void moveBack() {
+
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(0.25);
+        leftBackDrive.setPower(0.25);
 
     }
 
     public void moveLeft(){
 
-        leftFrontDrive.setPower(-0.25);
-        rightBackDrive.setPower(-0.25);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        leftFrontDrive.setPower(0.25);
+        rightBackDrive.setPower(0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
     }
 
     public void Stop(){
@@ -118,5 +112,22 @@ public class AutoShoot extends LinearOpMode
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         sleep(500);
+    }
+
+    public void celebration() {
+        shield1.setPosition(1);
+        shield2.setPosition(0);
+        sleep(500);
+        shield1.setPosition(0.6);
+        shield2.setPosition(0.4);
+        sleep(500);
+        shield1.setPosition(1);
+        shield2.setPosition(0);
+        sleep(500);
+        shield1.setPosition(0.6);
+        shield2.setPosition(0.4);
+        sleep(500);
+        shield1.setPosition(1);
+        shield2.setPosition(0);
     }
 }

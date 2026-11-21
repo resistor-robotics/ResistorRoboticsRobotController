@@ -44,6 +44,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
+
 /*
  * This file includes a teleop (driver-controlled) file for the goBILDA® StarterBot for the
  * 2025-2026 FIRST® Tech Challenge season DECODE™. It leverages a differential/Skid-Steer
@@ -65,6 +68,15 @@ public class StarterBotTeleopMecanum extends OpMode {
     final double FEED_TIME_SECONDS = 0.20; //The feeder servos run this long when a shot is requested.
     final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
     final double FULL_SPEED = 1.0;
+
+    final Color ORANGE = new Color(255, 100, 0);
+
+    PrismAnimations.Snakes right = new PrismAnimations.Snakes(ORANGE);
+
+    PrismAnimations.Solid middleSolid = new PrismAnimations.Solid(Color.PURPLE);
+    PrismAnimations.PoliceLights middlePoliceLights = new PrismAnimations.PoliceLights();
+
+    PrismAnimations.Snakes left = new PrismAnimations.Snakes(ORANGE);
 
     /*
      * When we control our launcher motor, we are using encoders. These allow the control system
