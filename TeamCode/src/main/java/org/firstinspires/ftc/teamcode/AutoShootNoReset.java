@@ -65,7 +65,7 @@ public class AutoShootNoReset extends LinearOpMode
         waitForStart();
 
         launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-        sleep(2000);
+        sleep(1000);
         windmillServo.setPower(-1);
         intake.setPower(0.5);
         sleep(6000);
@@ -73,18 +73,16 @@ public class AutoShootNoReset extends LinearOpMode
         launcher.setVelocity(0);
         intake.setPower(0);
         move();
-        long time = (long) (-550L * (battery.getVoltage()) + 14400L);
+        long time = (long) (-450L * (battery.getVoltage()) + 13600L);
         sleep(time);
         turn();
-        sleep(1750);
+        sleep(1500);
         moveBack();
         sleep(4500);
         Stop();
-        moveLeft();
-        sleep(4500);
-        Stop();
-        /*sleep(2000);
-        celebration();*/
+        sleep(1000);
+        celebration();
+        sleep(1000);
     }
     public void move()
     {
@@ -94,14 +92,6 @@ public class AutoShootNoReset extends LinearOpMode
         rightFrontDrive.setPower(-0.25);
         leftBackDrive.setPower(-0.25);
 
-    }
-
-    public void moveLeft(){
-
-        leftFrontDrive.setPower(0.25);
-        rightBackDrive.setPower(0.25);
-        rightFrontDrive.setPower(-0.25);
-        leftBackDrive.setPower(-0.25);
     }
 
     public void turn() {
@@ -115,10 +105,10 @@ public class AutoShootNoReset extends LinearOpMode
 
     public void moveBack() {
 
-        leftFrontDrive.setPower(0.25);
-        rightBackDrive.setPower(0.25);
-        rightFrontDrive.setPower(0.25);
-        leftBackDrive.setPower(0.25);
+        leftFrontDrive.setPower(-0.25);
+        rightBackDrive.setPower(-0.25);
+        rightFrontDrive.setPower(-0.25);
+        leftBackDrive.setPower(-0.25);
 
     }
 
